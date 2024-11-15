@@ -15,9 +15,9 @@ const Login = () => {
     e.preventDefault();
     try {
       const response = await axios.post('http://localhost:5000/api/auth/login', formData);
-      localStorage.setItem('token', response.data.token); // Save the JWT token
+      localStorage.setItem('token', response.data.token); 
       console.log('Login Successful');
-      navigate('/dashboard'); // Redirect to dashboard after login
+      navigate('/dashboard'); 
     } catch (error) {
       setError(error.response?.data?.message || 'An error occurred, please try again');
     }

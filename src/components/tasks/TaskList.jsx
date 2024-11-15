@@ -1,6 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import Header from '../Header';
 
 const TaskList = ({ task, onDelete }) => {
   const navigate = useNavigate();
@@ -18,14 +19,12 @@ const TaskList = ({ task, onDelete }) => {
         return;
       }
 
-      // Make an API request to delete the task
       await axios.delete(`http://localhost:5000/api/tasks/${task._id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
 
-      // Call onDelete prop to update the UI after task is deleted
       onDelete(task._id);
     } catch (error) {
       console.error('Failed to delete task:', error);
@@ -34,52 +33,54 @@ const TaskList = ({ task, onDelete }) => {
   };
 
   const handleEdit = () => {
-    // Navigate to the Edit Task page with the task id
     navigate(`/edit-task/${task._id}`);
   };
 
   return (
-    <div className="bg-white p-6 rounded-lg shadow-md">
-      <h3 className="text-xl text-center font-semibold">{task.title}</h3>
-      <p className="text-gray-700 text-justify mt-2">{task.description}</p>
+    <>
+    
+    <div className="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-all transform hover:scale-108">
+      <h3 className="text-2xl font-semibold text-gray-800 text-center mb-4">{task.title}</h3>
+      <p className="text-gray-600 text-sm text-justify mb-4">{task.description}</p>
 
-      <div className="mt-4 font-medium text-center">
-        <div className="flex">
+      <div className="text-gray-700 space-y-2 font-medium">
+        <div className="flex justify-between">
           <span className="text-gray-500">Start Date:</span>
-          <span className="text-gray-700">{formatDate(task.startDate)}</span>
+          <span>{formatDate(task.startDate)}</span>
         </div>
-        <div className="flex mt-2">
+        <div className="flex justify-between">
           <span className="text-gray-500">End Date:</span>
-          <span className="text-gray-700">{formatDate(task.endDate)}</span>
+          <span>{formatDate(task.endDate)}</span>
         </div>
-        <div className="flex mt-2">
+        <div className="flex justify-between">
           <span className="text-gray-500">Status:</span>
-          <span className={`text-${task.status==='Completed'?'green':'yellow'}-600`}>
+          <span className={`text-${task.status === 'Completed' ? 'green' : 'yellow'}-600 font-semibold`}>
             {task.status}
           </span>
         </div>
-        <div className="flex mt-2">
+        <div className="flex justify-between">
           <span className="text-gray-500">Progress:</span>
-          <span className="text-gray-700">{task.progress}%</span>
+          <span>{task.progress}%</span>
         </div>
       </div>
 
-      {/* Edit and Delete Buttons */}
-      <div className="mt-4 flex ms-80 ">
+      <div className="mt-6 flex justify-between">
         <button
           onClick={handleEdit}
-          className="bg-blue-600 me-4 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
+          className="bg-blue-600 text-white px-4 py-2 rounded-lg shadow-md hover:bg-blue-700 transform transition-all"
         >
           Edit Task
         </button>
         <button
           onClick={handleDelete}
-          className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700"
+          className="bg-red-600 text-white px-4 py-2 rounded-lg shadow-md hover:bg-red-700 transform transition-all"
         >
           Delete Task
         </button>
       </div>
     </div>
+    </>
+   
   );
 };
 

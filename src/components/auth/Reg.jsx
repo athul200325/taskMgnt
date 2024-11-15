@@ -14,16 +14,14 @@ const Reg = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      // Corrected to use 'formData' instead of 'FormData'
       const response = await axios.post('http://localhost:5000/api/auth/register', formData);
       console.log('Registration Successful', response);
-      navigate('/login'); // Redirect to login page after successful registration
+      navigate('/login'); 
     } catch (error) {
-      // Check if error.response is available
       if (error.response) {
-        setError(error.response.data.message); // Access the error message from the server response
+        setError(error.response.data.message); 
       } else {
-        setError('An unexpected error occurred. Please try again later.'); // Handle other errors
+        setError('An unexpected error occurred. Please try again later.'); 
       }
     }
   };

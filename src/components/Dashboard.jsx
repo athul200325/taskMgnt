@@ -1,84 +1,82 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import TaskList from './tasks/TaskList';  // Import TaskList to display tasks
+import TaskList from './tasks/TaskList'; 
 import axios from 'axios';
+import Header from './Header';
+import image from '../assets/notask.png'
 
 const Dashboard = () => {
-  const [tasks, setTasks] = useState([]);  // Store tasks
-  const [loading, setLoading] = useState(true);  // Loading state
-  const [error, setError] = useState('');  // Error state
-  const navigate = useNavigate();  // To handle navigation
+  const [tasks, setTasks] = useState([]);  
+  const [loading, setLoading] = useState(true);  
+  const [error, setError] = useState('');  
+  const navigate = useNavigate();  
 
-  // Fetch tasks when the component mounts
   useEffect(() => {
-    const token = localStorage.getItem('token');  // Get the token from localStorage
+    const token = localStorage.getItem('token');  
     if (!token) {
-      navigate('/login');  // Redirect to login page if not logged in
+      navigate('/login');  
     } else {
       const fetchTasks = async () => {
         try {
           const response = await axios.get('http://localhost:5000/api/tasks', {
             headers: {
-              Authorization: `Bearer ${token}`,  // Pass JWT token for authentication
+              Authorization: `Bearer ${token}`,  
             },
           });
-          setTasks(response.data);  // Set the tasks from the API
-          setLoading(false);  // Set loading to false when data is fetched
+          setTasks(response.data);  
+          setLoading(false);  
         } catch (error) {
-          setError('Failed to fetch tasks. Please try again later.');  // Error handling
-          setLoading(false);  // Set loading to false in case of error
+          setError('Failed to fetch tasks. Please try again later.');  
+          setLoading(false); 
         }
       };
       fetchTasks();
     }
-  }, [navigate]);  // Dependency array includes navigate to trigger useEffect on change
+  }, [navigate]);  
 
   const handleDelete = (taskId) => {
-    setTasks(tasks.filter(task => task._id !== taskId));  // Remove the deleted task from the state
-  };
-
-  // Logout function
-  const handleLogout = () => {
-    localStorage.removeItem('token');  // Remove token from localStorage
-    navigate('/login');  // Redirect to login page
+    setTasks(tasks.filter(task => task._id !== taskId));  
   };
 
   return (
-    <div className="min-h-screen bg-gray-100">
-      {/* Header Section */}
-      <header className="bg-blue-600 p-4 text-white text-center text-lg font-bold flex justify-between items-center">
-        <div>Task Management Dashboard</div>
-        {/* Logout Button */}
-        <button 
-          onClick={handleLogout}  // Handle logout when clicked
-          className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700"
-        >
-          Logout
-        </button>
-      </header>
+    <>
+      <Header />
+      <div className="min-h-screen bg-gray-50">
+        <main className="max-w-7xl mx-auto p-6">
+          <div className="flex justify-end mb-6">
+            <button
+              onClick={() => navigate('/taskform')}
+              className="bg-gradient-to-r from-green-600 to-green-800 text-white px-6 py-3 rounded-lg shadow-lg hover:from-green-700 hover:to-green-900 transition duration-300"
+            >
+              <span className="font-semibold">+ Add Task</span>
+            </button>
+          </div>
 
-      {/* Main Content Section */}
-      <main className="p-6">
-        {/* Add Task Button */}
-        <div className="flex justify-end mb-4">
-          <button 
-            onClick={() => navigate('/taskform')} 
-            className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700"
-          >
-            Add Task
-          </button>
-        </div>
+          {loading && <p className="text-center text-lg text-gray-600">Loading tasks...</p>}
+          {error && <p className="text-center text-lg text-red-600">{error}</p>}
 
-        {loading && <p>Loading tasks...</p>}
-        {error && <p className="text-red-500">{error}</p>}
+          {tasks.length === 0 && !loading && !error && (
+            <div className="flex flex-col justify-center items-center my-8">
+            <img
+              src={image}
+              alt="No tasks available"
+              className="w-[500px] h-auto"
+            />
+            <h2 className="mt-4 font-normal text-slate-400 text-4xl">Add new task</h2>
+          </div>
+          
+          )}
 
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {tasks.map(task => (
-            <TaskList key={task._id} task={task} onDelete={handleDelete} />
-          ))}
-        </div>
-      </main>
-    </div>
+          {tasks.length > 0 && (
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+              {tasks.map((task) => (
+                <TaskList key={task._id} task={task} onDelete={handleDelete} />
+              ))}
+            </div>
+          )}
+        </main>
+      </div>
+    </>
   );
 };
 
