@@ -14,7 +14,7 @@ const Reg = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:5000/api/auth/register', formData);
+      const response = await axios.post('https://task-mgmnt-server-1.onrender.com/api/auth/register', formData);
       console.log('Registration Successful', response);
       navigate('/login'); 
     } catch (error) {

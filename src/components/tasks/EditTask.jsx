@@ -27,7 +27,7 @@ const EditTask = () => {
         }
 
         const token = localStorage.getItem('token');
-        const response = await axios.get(`http://localhost:5000/api/tasks/${id}`, {
+        const response = await axios.get(`https://task-mgmnt-server-1.onrender.com/api/tasks/${id}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         setTask(response.data);
@@ -51,7 +51,7 @@ const EditTask = () => {
     const token = localStorage.getItem('token');
 
     try {
-      await axios.put(`http://localhost:5000/api/tasks/${id}`, task, {
+      await axios.put(`https://task-mgmnt-server-1.onrender.com/api/tasks/${id}`, task, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
